@@ -1,7 +1,6 @@
 import React from "react";
 
 function Input({ type, placeholder, value, onChange, style }) {
-  console.log(style);
   return (
     <>
       <input

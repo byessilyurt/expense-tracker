@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectValuesList } from "../redux/values";
 
 import Button from "./Button";
 import Input from "./Input";
-
 import { GrAdd } from "react-icons/gr";
 
 const inputStyles = {
@@ -14,6 +15,9 @@ const inputStyles = {
 
 function AddIncome({ type }) {
   const [switchInputs, setSwitchInputs] = useState(false);
+  const values = useSelector(selectValuesList);
+
+  console.log(values);
 
   const handleInputs = () => {
     return (
