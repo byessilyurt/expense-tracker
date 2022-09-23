@@ -1,21 +1,15 @@
 import Header from "./components/Header";
-import Button from "./components/Button";
-import Input from "./components/Input";
+import Income from "./components/Income";
+import Expense from "./components/Expense";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <Button
-        text="Click me"
-        onClick={() => alert("Hello world!")}
-        type="button"
-      />
-      <Input
-        type="text"
-        placeholder="Enter your name"
-        onChange={(e) => console.log(e.target.value)}
-      />
+      <main className="flex md:flex-col items-start gap-10 mt-10 mx-20">
+        <Income />
+        <Expense />
+      </main>
     </div>
   );
 }
