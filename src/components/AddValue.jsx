@@ -25,14 +25,8 @@ const AddValue = ({ type }) => {
   const [switchInputs, setSwitchInputs] = useState(false);
   const [newIncome, setNewIncome] = useState({ amount: 0, resource: "" });
   const [newExpense, setNewExpense] = useState({ amount: 0, resource: "" });
-  const [editIncomeValue, setEditIncomeValue] = useState({
-    amount: newIncome.amount,
-    resource: newIncome.resource,
-  });
-  const [editExpenseValue, setEditExpenseValue] = useState({
-    amount: newExpense.amount,
-    resource: newExpense.resource,
-  });
+  const [editIncomeValue, setEditIncomeValue] = useState({});
+  const [editExpenseValue, setEditExpenseValue] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
   const { income, expense, selectedCurrency } = useSelector(
@@ -55,14 +49,12 @@ const AddValue = ({ type }) => {
     }
     setIsEditing(false);
   };
-  const handleAddClick = (e) => {
+  const handleAddClick = () => {
     setSwitchInputs((prev) => !prev);
     if (type === "income") {
       if (newIncome?.resource.length > 0 && newIncome?.amount > 0) {
         dispatch(addIncome(newIncome));
         setNewIncome({ amount: 0, resource: "" });
-      }
-      {
       }
     } else {
       if (newExpense?.resource && newExpense?.amount) {
@@ -77,6 +69,15 @@ const AddValue = ({ type }) => {
     } else {
       dispatch(deleteExpense(index));
     }
+  };
+  const handleDoubleClick = (index) => {
+    if (type === "income") {
+      console.log(income[index].payload);
+      setEditIncomeValue(income[index].payload);
+    } else {
+      setEditExpenseValue(expense[index].payload);
+    }
+    setIsEditing(true);
   };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -103,7 +104,7 @@ const AddValue = ({ type }) => {
                     ? "$"
                     : selectedCurrency.payload === "EUR"
                     ? "€"
-                    : selectedCurrency === "TRY"
+                    : selectedCurrency.payload === "TRY"
                     ? "₺"
                     : null}{" "}
                 </span>
@@ -116,7 +117,7 @@ const AddValue = ({ type }) => {
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
                 ) : (
-                  <span onDoubleClick={() => setIsEditing(true)}>
+                  <span onDoubleClick={() => handleDoubleClick(index)}>
                     {item.payload.amount}
                   </span>
                 )}{" "}
@@ -133,7 +134,7 @@ const AddValue = ({ type }) => {
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
                 ) : (
-                  <span onDoubleClick={() => setIsEditing(true)}>
+                  <span onDoubleClick={() => handleDoubleClick(index)}>
                     {item.payload.resource}
                   </span>
                 )}{" "}
