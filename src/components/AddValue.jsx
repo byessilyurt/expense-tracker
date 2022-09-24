@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   addIncome,
-  addExpense,
   deleteIncome,
+  editIncome,
+  addExpense,
   deleteExpense,
+  editExpense,
 } from "../redux/values";
 
 import Button from "./Button";
@@ -23,6 +25,15 @@ const AddValue = ({ type }) => {
   const [switchInputs, setSwitchInputs] = useState(false);
   const [newIncome, setNewIncome] = useState({ amount: 0, resource: "" });
   const [newExpense, setNewExpense] = useState({ amount: 0, resource: "" });
+  const [editIncomeValue, setEditIncomeValue] = useState({
+    amount: newIncome.amount,
+    resource: newIncome.resource,
+  });
+  const [editExpenseValue, setEditExpenseValue] = useState({
+    amount: newExpense.amount,
+    resource: newExpense.resource,
+  });
+  const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
   const { income, expense, selectedCurrency } = useSelector(
     (state) => state.values
@@ -34,6 +45,15 @@ const AddValue = ({ type }) => {
     } else {
       setNewExpense({ ...newExpense, [e.target.name]: e.target.value });
     }
+  };
+  const handleEditing = (index) => {
+    if (type === "income") {
+      dispatch(editIncome(index, editIncomeValue));
+    }
+    if (type === "expense") {
+      dispatch(editExpense(index, editExpenseValue));
+    }
+    setIsEditing(false);
   };
   const handleAddClick = (e) => {
     setSwitchInputs((prev) => !prev);
@@ -58,9 +78,16 @@ const AddValue = ({ type }) => {
       dispatch(deleteExpense(index));
     }
   };
-
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddClick();
+    }
+  };
   const listValues = () => {
     const mapValue = type === "income" ? income : expense;
+    const editValue = type === "income" ? editIncomeValue : editExpenseValue;
+    const setEditValue =
+      type === "income" ? setEditIncomeValue : setEditExpenseValue;
     return (
       <>
         {mapValue?.map((item, index) => (
@@ -80,12 +107,36 @@ const AddValue = ({ type }) => {
                     ? "₺"
                     : null}{" "}
                 </span>
-                {item.payload.amount}
+                {isEditing ? (
+                  <Input
+                    type="number"
+                    value={editValue.amount}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => handleEditing(index)}
+                    className="bg-transparent border-none outline-none w-16 text-gray-600"
+                  />
+                ) : (
+                  <span onDoubleClick={() => setIsEditing(true)}>
+                    {item.payload.amount}
+                  </span>
+                )}{" "}
               </span>
             </div>
             <div className="flex">
               <div className="flex flex-row justify-center items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
-                {item.payload.resource}
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={editValue.resource}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => handleEditing(index)}
+                    className="bg-transparent border-none outline-none w-16 text-gray-600"
+                  />
+                ) : (
+                  <span onDoubleClick={() => setIsEditing(true)}>
+                    {item.payload.resource}
+                  </span>
+                )}{" "}
               </div>
               <Button
                 text={<MdDeleteOutline />}
@@ -120,9 +171,7 @@ const AddValue = ({ type }) => {
               handleChange(e);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleAddClick(e);
-              }
+              handleKeyDown(e);
             }}
           />
         ) : (
@@ -138,9 +187,7 @@ const AddValue = ({ type }) => {
               handleChange(e);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleAddClick(e);
-              }
+              handleKeyDown(e);
             }}
           />
         )}

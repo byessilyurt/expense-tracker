@@ -1,6 +1,16 @@
 import React from "react";
 
-function Input({ type, placeholder, value, onChange, style, name, onKeyDown }) {
+function Input({
+  type,
+  placeholder,
+  value,
+  onChange,
+  style,
+  name,
+  onKeyDown,
+  onBlur,
+  className,
+}) {
   return (
     <>
       <input
@@ -11,6 +21,8 @@ function Input({ type, placeholder, value, onChange, style, name, onKeyDown }) {
         style={style}
         name={name}
         onKeyDown={onKeyDown}
+        onBlur={onBlur}
+        className={className}
       />
     </>
   );
