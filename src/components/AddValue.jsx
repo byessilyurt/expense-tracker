@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addIncome, addExpense } from "../redux/values";
+import {
+  addIncome,
+  addExpense,
+  deleteIncome,
+  deleteExpense,
+} from "../redux/values";
 
 import Button from "./Button";
 import Input from "./Input";
@@ -30,7 +35,7 @@ const AddValue = ({ type }) => {
       setNewExpense({ ...newExpense, [e.target.name]: e.target.value });
     }
   };
-  const handleClick = (e) => {
+  const handleAddClick = (e) => {
     setSwitchInputs((prev) => !prev);
     if (type === "income") {
       if (newIncome?.resource.length > 0 && newIncome?.amount > 0) {
@@ -46,6 +51,14 @@ const AddValue = ({ type }) => {
       }
     }
   };
+  const handleDeleteClick = (index) => {
+    if (type === "income") {
+      dispatch(deleteIncome(index));
+    } else {
+      dispatch(deleteExpense(index));
+    }
+  };
+
   const listValues = () => {
     const mapValue = type === "income" ? income : expense;
     return (
@@ -57,14 +70,31 @@ const AddValue = ({ type }) => {
           >
             <div className="flex flex-col">
               <span className="text-sm font-light">
-                {selectedCurrency.payload} {item.payload.amount}
+                <span className="font-medium">
+                  {" "}
+                  {selectedCurrency.payload === "USD"
+                    ? "$"
+                    : selectedCurrency.payload === "EUR"
+                    ? "€"
+                    : selectedCurrency === "TRY"
+                    ? "₺"
+                    : null}{" "}
+                </span>
+                {item.payload.amount}
               </span>
             </div>
             <div className="flex">
-              <div className="text-sm font-light mr-2">
+              <div className="flex flex-row justify-center items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
                 {item.payload.resource}
               </div>
-              <Button text={<MdDeleteOutline />} type="button" />
+              <Button
+                text={<MdDeleteOutline />}
+                type="button"
+                onClick={() => {
+                  handleDeleteClick(index);
+                }}
+                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-2 border border-red-500 hover:border-transparent rounded"
+              />
             </div>
           </div>
         ))}
@@ -76,7 +106,7 @@ const AddValue = ({ type }) => {
       <div className="flex flex-row-reverse bg-white shadow-xl p-2 pr-4 mt-4">
         <Button
           text={<GrAdd />}
-          onClick={(e) => handleClick(e)}
+          onClick={(e) => handleAddClick(e)}
           type="button"
         />
         {switchInputs ? (
@@ -91,7 +121,7 @@ const AddValue = ({ type }) => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleClick(e);
+                handleAddClick(e);
               }
             }}
           />
@@ -109,7 +139,7 @@ const AddValue = ({ type }) => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleClick(e);
+                handleAddClick(e);
               }
             }}
           />
@@ -129,4 +159,5 @@ const AddValue = ({ type }) => {
     </div>
   );
 };
+
 export default AddValue;

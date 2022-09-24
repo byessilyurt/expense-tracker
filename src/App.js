@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <main className="flex md:flex-col items-start gap-10 mt-10 mx-20">
+      <main className="flex items-start gap-10 m-10 mx-20">
         <Income />
         <Expense />
       </main>

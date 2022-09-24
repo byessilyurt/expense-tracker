@@ -12,11 +12,15 @@ export const valuesSlice = createSlice({
     addIncome: (state, newIncome) => {
       state.income.push(newIncome);
     },
-    removeIncome: () => {},
+    deleteIncome: (state, index) => {
+      state.income.splice(index, 1);
+    },
+    deleteExpense: (state, index) => {
+      state.expense.splice(index, 1);
+    },
     addExpense: (state, newExpense) => {
       state.expense.push(newExpense);
     },
-    removeExpense: () => {},
     changeCurrency: (state, newCurrency) => {
       state.selectedCurrency = newCurrency;
     },
@@ -25,9 +29,9 @@ export const valuesSlice = createSlice({
 
 export const {
   addIncome,
-  removeIncome,
+  deleteIncome,
   addExpense,
-  removeExpense,
+  deleteExpense,
   changeCurrency,
 } = valuesSlice.actions;
 
