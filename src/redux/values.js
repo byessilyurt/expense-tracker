@@ -1,15 +1,34 @@
-import { createReducer } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-/* Selector */
-const selectValuesState = (rootState) => rootState.values;
-export const selectValuesList = (rootState) =>
-  selectValuesState(rootState).values;
-/* Reducer  */
-const initialState = {
-  incomes: [11, 2, 3],
-  expenses: [],
-};
+export const valuesSlice = createSlice({
+  name: "incomeExpenseValues",
+  initialState: {
+    income: [],
+    expense: [],
+    currencies: ["USD", "EUR", "TRY"],
+    selectedCurrency: { payload: "USD" },
+  },
+  reducers: {
+    addIncome: (state, newIncome) => {
+      state.income.push(newIncome);
+    },
+    removeIncome: () => {},
+    addExpense: (state, newExpense) => {
+      state.expense.push(newExpense);
+    },
+    removeExpense: () => {},
+    changeCurrency: (state, newCurrency) => {
+      state.selectedCurrency = newCurrency;
+    },
+  },
+});
 
-const reducer = createReducer(initialState, {});
+export const {
+  addIncome,
+  removeIncome,
+  addExpense,
+  removeExpense,
+  changeCurrency,
+} = valuesSlice.actions;
 
-export default reducer;
+export default valuesSlice.reducer;

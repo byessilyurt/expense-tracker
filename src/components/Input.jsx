@@ -1,6 +1,6 @@
 import React from "react";
 
-function Input({ type, placeholder, value, onChange, style }) {
+function Input({ type, placeholder, value, onChange, style, name, onKeyDown }) {
   return (
     <>
       <input
@@ -9,6 +9,8 @@ function Input({ type, placeholder, value, onChange, style }) {
         value={value}
         onChange={onChange}
         style={style}
+        name={name}
+        onKeyDown={onKeyDown}
       />
     </>
   );
