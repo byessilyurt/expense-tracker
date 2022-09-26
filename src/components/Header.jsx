@@ -39,7 +39,7 @@ function Header() {
 
   return (
     <div className="flex justify-between items-center m-4 p-4">
-      <div className="ml-8 text-3xl font-bold p-2 text-black">
+      <div className="md:ml-8 ml-2 md:text-3xl text-xl font-bold p-2 text-black">
         Expense Tracker
       </div>
       <div className="flex">

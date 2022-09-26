@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   addIncome,
@@ -27,11 +27,26 @@ const AddValue = ({ type }) => {
   const [newExpense, setNewExpense] = useState({ amount: 0, resource: "" });
   const [editIncomeValue, setEditIncomeValue] = useState({});
   const [editExpenseValue, setEditExpenseValue] = useState({});
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState({
+    bool: false,
+    index: null,
+  });
   const dispatch = useDispatch();
   const { income, expense, selectedCurrency } = useSelector(
     (state) => state.values
   );
+  const currency =
+    selectedCurrency.payload === "USD"
+      ? "$"
+      : selectedCurrency.payload === "EUR"
+      ? "€"
+      : selectedCurrency.payload === "TRY"
+      ? "₺"
+      : null;
+
+  useEffect(() => {
+    console.log(editIncomeValue);
+  }, [editIncomeValue]);
 
   const handleChange = (e) => {
     if (type === "income") {
@@ -40,14 +55,15 @@ const AddValue = ({ type }) => {
       setNewExpense({ ...newExpense, [e.target.name]: e.target.value });
     }
   };
-  const handleEditing = (index) => {
+  const handleEditingOnBlur = (index) => {
+    setIsEditing({ bool: false, index: null });
     if (type === "income") {
+      console.log("blured", editIncomeValue);
       dispatch(editIncome(index, editIncomeValue));
     }
     if (type === "expense") {
       dispatch(editExpense(index, editExpenseValue));
     }
-    setIsEditing(false);
   };
   const handleAddClick = () => {
     setSwitchInputs((prev) => !prev);
@@ -72,12 +88,12 @@ const AddValue = ({ type }) => {
   };
   const handleDoubleClick = (index) => {
     if (type === "income") {
-      console.log(income[index].payload);
+      console.log("Double clicked: ", income[index].payload);
       setEditIncomeValue(income[index].payload);
     } else {
       setEditExpenseValue(expense[index].payload);
     }
-    setIsEditing(true);
+    setIsEditing({ bool: true, index });
   };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -98,46 +114,37 @@ const AddValue = ({ type }) => {
           >
             <div className="flex flex-col">
               <span className="text-sm font-light">
-                <span className="font-medium">
-                  {" "}
-                  {selectedCurrency.payload === "USD"
-                    ? "$"
-                    : selectedCurrency.payload === "EUR"
-                    ? "€"
-                    : selectedCurrency.payload === "TRY"
-                    ? "₺"
-                    : null}{" "}
-                </span>
-                {isEditing ? (
+                <span className="font-medium">{currency} </span>
+                {isEditing.bool && isEditing.index === index ? (
                   <Input
                     type="number"
                     value={editValue.amount}
                     onChange={(e) => setEditValue(e.target.value)}
-                    onBlur={() => handleEditing(index)}
+                    onBlur={() => handleEditingOnBlur(index)}
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
                 ) : (
                   <span onDoubleClick={() => handleDoubleClick(index)}>
                     {item.payload.amount}
                   </span>
-                )}{" "}
+                )}
               </span>
             </div>
             <div className="flex">
               <div className="flex flex-row justify-center items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
-                {isEditing ? (
+                {isEditing.bool && isEditing.index === index ? (
                   <Input
                     type="text"
                     value={editValue.resource}
                     onChange={(e) => setEditValue(e.target.value)}
-                    onBlur={() => handleEditing(index)}
+                    onBlur={() => handleEditingOnBlur(index)}
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
                 ) : (
                   <span onDoubleClick={() => handleDoubleClick(index)}>
                     {item.payload.resource}
                   </span>
-                )}{" "}
+                )}
               </div>
               <Button
                 text={<MdDeleteOutline />}
@@ -165,7 +172,7 @@ const AddValue = ({ type }) => {
           <Input
             style={inputStyles}
             type="number"
-            placeholder="Amount"
+            placeholder={`${currency}`}
             name="amount"
             value={type === "income" ? newIncome.amount : newExpense.amount}
             onChange={(e) => {
