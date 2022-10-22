@@ -1,7 +1,7 @@
 import React from "react";
 
 const Graph = () => {
-  return <div>Graph</div>;
+  return <div>Graph //TODO</div>;
 };
 
 export default Graph;

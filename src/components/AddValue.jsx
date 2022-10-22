@@ -104,9 +104,9 @@ const AddValue = ({ type }) => {
         {mapValue?.map((item, index) => (
           <div
             key={index}
-            className="flex flex-row justify-between items-center bg-white shadow-xl p-2 pr-4 mt-4"
+            className="flex flex-row justify-between items-center bg-white shadow-xl p-2 pr-4 mt-4 w-96 md:w-full "
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
               <span className="text-sm font-light">
                 <span className="font-medium">{currency} </span>
                 {isEditing.bool && isEditing.index === index ? (
@@ -158,7 +158,7 @@ const AddValue = ({ type }) => {
                 onClick={() => {
                   handleDeleteClick(index);
                 }}
-                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-2 border border-red-500 hover:border-transparent rounded"
+                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-2  rounded"
               />
             </div>
           </div>
@@ -175,28 +175,29 @@ const AddValue = ({ type }) => {
           type="button"
         />
         {switchInputs ? (
-          <Input
-            style={inputStyles}
-            type="number"
-            placeholder={`${currency}`}
-            name="amount"
-            value={type === "income" ? newIncome.amount : newExpense.amount}
-            onChange={(e) => {
-              handleChange(e);
-            }}
-            onKeyDown={(e) => {
-              handleKeyDown(e);
-            }}
-          />
+          <>
+            <Input
+              style={inputStyles}
+              type="number"
+              placeholder={`${currency}`}
+              name="amount"
+              value={type === "income" ? newIncome.amount : newExpense.amount}
+              onChange={(e) => {
+                handleChange(e);
+              }}
+              onKeyDown={(e) => {
+                handleKeyDown(e);
+              }}
+            />
+            <span className="font-medium mr-1">{currency} </span>
+          </>
         ) : (
           <Input
             style={inputStyles}
             type="text"
             name="resource"
             value={type === "income" ? newIncome.resource : newExpense.resource}
-            placeholder={
-              type === "income" ? "Income Resource" : "Expense Category"
-            }
+            placeholder={type === "income" ? "Source of Income" : "Category"}
             onChange={(e) => {
               handleChange(e);
             }}
