@@ -31,10 +31,14 @@ const AddValue = ({ type }) => {
     bool: false,
     index: null,
   });
-  const dispatch = useDispatch();
   const { income, expense, selectedCurrency } = useSelector(
     (state) => state.values
   );
+  const mapValue = type === "income" ? income : expense;
+  const editValue = type === "income" ? editIncomeValue : editExpenseValue;
+  const setEditValue =
+    type === "income" ? setEditIncomeValue : setEditExpenseValue;
+  const dispatch = useDispatch();
   const currency =
     selectedCurrency.payload === "USD"
       ? "$"
@@ -44,10 +48,6 @@ const AddValue = ({ type }) => {
       ? "₺"
       : null;
 
-  useEffect(() => {
-    console.log(editIncomeValue);
-  }, [editIncomeValue]);
-
   const handleChange = (e) => {
     if (type === "income") {
       setNewIncome({ ...newIncome, [e.target.name]: e.target.value });
@@ -56,14 +56,13 @@ const AddValue = ({ type }) => {
     }
   };
   const handleEditingOnBlur = (index) => {
-    setIsEditing({ bool: false, index: null });
     if (type === "income") {
-      console.log("blured", editIncomeValue);
-      dispatch(editIncome(index, editIncomeValue));
+      dispatch(editIncome({ index: index, newIncome: editIncomeValue }));
     }
     if (type === "expense") {
-      dispatch(editExpense(index, editExpenseValue));
+      dispatch(editExpense({ index: index, newExpense: editExpenseValue }));
     }
+    setIsEditing({ bool: false, index: null });
   };
   const handleAddClick = () => {
     setSwitchInputs((prev) => !prev);
@@ -88,7 +87,6 @@ const AddValue = ({ type }) => {
   };
   const handleDoubleClick = (index) => {
     if (type === "income") {
-      console.log("Double clicked: ", income[index].payload);
       setEditIncomeValue(income[index].payload);
     } else {
       setEditExpenseValue(expense[index].payload);
@@ -101,10 +99,6 @@ const AddValue = ({ type }) => {
     }
   };
   const listValues = () => {
-    const mapValue = type === "income" ? income : expense;
-    const editValue = type === "income" ? editIncomeValue : editExpenseValue;
-    const setEditValue =
-      type === "income" ? setEditIncomeValue : setEditExpenseValue;
     return (
       <>
         {mapValue?.map((item, index) => (
@@ -119,7 +113,13 @@ const AddValue = ({ type }) => {
                   <Input
                     type="number"
                     value={editValue.amount}
-                    onChange={(e) => setEditValue(e.target.value)}
+                    name="amount"
+                    onChange={(e) =>
+                      setEditValue({
+                        ...editValue,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
                     onBlur={() => handleEditingOnBlur(index)}
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
@@ -136,7 +136,13 @@ const AddValue = ({ type }) => {
                   <Input
                     type="text"
                     value={editValue.resource}
-                    onChange={(e) => setEditValue(e.target.value)}
+                    name="resource"
+                    onChange={(e) => {
+                      setEditValue({
+                        ...editValue,
+                        [e.target.name]: e.target.value,
+                      });
+                    }}
                     onBlur={() => handleEditingOnBlur(index)}
                     className="bg-transparent border-none outline-none w-16 text-gray-600"
                   />
@@ -202,6 +208,7 @@ const AddValue = ({ type }) => {
       </div>
     );
   };
+
   return (
     <div className="block">
       <div>
