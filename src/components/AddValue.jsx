@@ -194,6 +194,7 @@ const AddValue = ({ type }) => {
         ) : (
           <Input
             style={inputStyles}
+            className="active:bg-transparent"
             type="text"
             name="resource"
             value={type === "income" ? newIncome.resource : newExpense.resource}

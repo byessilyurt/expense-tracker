@@ -16,7 +16,7 @@ function Header() {
     return (
       <div className="flex">
         <select
-          className="hover:bg-gray-200 text-semibold text-md px-2 py-1 rounded-md focus:outline-none bg-transparent focus:bg-gray-200 "
+          className="cursor-pointer hover:bg-gray-200 text-semibold text-md px-2 py-1 rounded-md focus:outline-none bg-transparent focus:bg-gray-200 "
           onChange={(e) => {
             handleChange(e);
           }}
