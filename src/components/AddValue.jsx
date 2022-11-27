@@ -106,7 +106,7 @@ const AddValue = ({ type }) => {
             key={index}
             className="flex flex-row justify-between items-center bg-white shadow-xl p-2 pr-4 mt-4 w-96 md:w-full "
           >
-            <div className="flex flex-col justify-center items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
+            <div className="flex flex-col justify-start items-center bg-transparent hover:bg-gray-200 font-light py-2 px-2 rounded mr-2">
               <span className="text-sm font-light">
                 <span className="font-medium">{currency} </span>
                 {isEditing.bool && isEditing.index === index ? (
@@ -121,7 +121,7 @@ const AddValue = ({ type }) => {
                       })
                     }
                     onBlur={() => handleEditingOnBlur(index)}
-                    className="bg-transparent border-none outline-none w-16 text-gray-600"
+                    className="bg-transparent border-none outline-none text-gray-600"
                   />
                 ) : (
                   <span onDoubleClick={() => handleDoubleClick(index)}>
